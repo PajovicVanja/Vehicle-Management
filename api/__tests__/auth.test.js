@@ -14,7 +14,7 @@ describe('Auth API', () => {
     jest.resetModules();
     mockDb = createMockDb({
       users: {
-        // seed user doc without explicit role (defaults to Driver)
+        // seed user doc without explicit role (defaults to Driver)test
         u1: { email: 'admin@example.com' }
       }
     });
