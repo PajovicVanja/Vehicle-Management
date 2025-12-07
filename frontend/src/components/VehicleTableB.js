@@ -1,4 +1,5 @@
 import VehicleRowB from "./VehicleRowB"; // Use the new Version B row
+import browsee from '@browsee/web-sdk';
 
 const VehicleTableB = ({
   vehicles,
@@ -34,7 +35,10 @@ const VehicleTableB = ({
                 canRepairVehicle={canRepairVehicle}
                 canDeleteVehicle={canDeleteVehicle}
                 handleView={handleView}
-                handleReserve={handleReserve}
+                handleReserve={(id) => {
+                    browsee.addEvent('Reservation_Clicked', { vehicleName: vehicle.vehicleName });
+                    handleReserve(id);
+                }}
                 removeReserve={removeReserve}
                 setReportIssueVehicleId={setReportIssueVehicleId}
                 handleRepair={handleRepair}

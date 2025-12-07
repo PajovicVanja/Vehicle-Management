@@ -1,6 +1,7 @@
 // ReserveVehicleForm.js
 
 import React, { useState } from 'react';
+import browsee from '@browsee/web-sdk';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../App.css';
@@ -71,6 +72,8 @@ function ReserveVehicleForm({ token, reserveVehicleId, setReserveVehicleId, fetc
 
       if (result.success) {
         console.log(`[ReserveVehicleForm] Vehicle ${reserveVehicleId} status updated.`);
+        browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'A' });
+        
         if (onRefresh) {
            console.log('Refreshing user data in App...');
            await onRefresh();

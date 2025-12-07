@@ -1,5 +1,6 @@
 // frontend/src/components/ReserveVehicleFormB.js
 import React, { useState } from 'react';
+import browsee from '@browsee/web-sdk';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { reserveVehicle } from '../services/vehicleService';
@@ -40,6 +41,7 @@ function ReserveVehicleFormB({ token, reserveVehicleId, setReserveVehicleId, fet
       }, token);
 
       if (result.success) {
+        browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'B' });
         if (onRefresh) {
             await onRefresh();
         }

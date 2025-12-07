@@ -1,5 +1,6 @@
 // frontend/src/components/VehicleTable.js
 import React from "react";
+import browsee from '@browsee/web-sdk';
 import VehicleRow from "./VehicleRow";
 
 const VehicleTable = ({
@@ -39,7 +40,10 @@ const VehicleTable = ({
             canRepairVehicle={canRepairVehicle}
             canDeleteVehicle={canDeleteVehicle}
             handleView={handleView}
-            handleReserve={handleReserve}
+            handleReserve={(id) => {
+                browsee.addEvent('Reservation_Clicked', { vehicleName: vehicle.vehicleName });
+                handleReserve(id);
+            }}
             removeReserve={removeReserve}
             setReportIssueVehicleId={setReportIssueVehicleId}
             handleRepair={handleRepair}

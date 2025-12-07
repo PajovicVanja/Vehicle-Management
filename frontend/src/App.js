@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -15,6 +15,10 @@ import { getUserData } from './services/authService';
 import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 
 import { getReservationData } from './services/reservationService';
+
+import browsee from '@browsee/web-sdk';
+
+// ... other imports
 
 function App() {
   const [token, setToken] = useState(null); // Auth token
@@ -34,8 +38,12 @@ function App() {
   // Check for variant query param on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('variant') === 'B') {
+    const isB = params.get('variant') === 'B';
+    if (isB) {
       setIsVersionB(true);
+      browsee.addEvent('AB_Test_Variant', { variant: 'B' });
+    } else {
+        browsee.addEvent('AB_Test_Variant', { variant: 'A' });
     }
   }, []);
 
@@ -46,7 +54,7 @@ function App() {
 
   // Fetch role and license status after login
   // Fetch role and license status after login
-  const refreshUserData = async () => {
+  const refreshUserData = useCallback(async () => {
       if (token) {
         const userData = await getUserData(token);
         if (userData.success) {
@@ -71,11 +79,11 @@ function App() {
           user ? setUid(user.uid) : setUid(null);
         }
       }
-  };
+  }, [token]);
 
   useEffect(() => {
     refreshUserData();
-  }, [token]);
+  }, [refreshUserData]);
 
   useEffect(() => {
     // Fetch user reservation only after `reservations` and `uid` have been set
@@ -115,6 +123,10 @@ function App() {
                 canReserve={role === 'Driver'} 
                 userReservationReset={setUserReservation}
                 onRefresh={refreshUserData}
+                onSuccess={() => {
+                  setShowReserve(false);
+                  setShowAddVehicle(false);
+                }}
               />
         ) : (
              <ReserveVehicle
@@ -125,6 +137,10 @@ function App() {
                 canReserve={role === 'Driver'} 
                 userReservationReset={setUserReservation}
                 onRefresh={refreshUserData}
+                onSuccess={() => {
+                  setShowReserve(false);
+                  setShowAddVehicle(false);
+                }}
             />
         )
       ) : showProfile ? (

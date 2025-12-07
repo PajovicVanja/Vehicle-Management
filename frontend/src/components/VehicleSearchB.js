@@ -1,5 +1,6 @@
 // frontend/src/components/VehicleSearchB.js
 import React, { useState } from "react";
+import browsee from '@browsee/web-sdk';
 import "../CSS/ReserveVehicle.css"; // Reuse existing styles
 import "../CSS/VersionB.css"; // Import Version B specific styles
 
@@ -50,7 +51,11 @@ function VehicleSearchB({ filters, setFilters, onClear }) {
             <button
                 type="button"
                 className="advanced-toggle-btn"
-                onClick={() => setShowAdvanced(!showAdvanced)}
+                onClick={() => {
+                    const newState = !showAdvanced;
+                    setShowAdvanced(newState);
+                    browsee.addEvent('Advanced_Filters_Toggle', { state: newState ? 'opened' : 'closed' });
+                }}
             >
                 {showAdvanced ? "Hide Filters" : "More Filters"}
             </button>
