@@ -41,9 +41,13 @@ function App() {
     const isB = params.get('variant') === 'B';
     if (isB) {
       setIsVersionB(true);
-      browsee.addEvent('AB_Test_Variant', { variant: 'B' });
+      if (browsee && typeof browsee.addEvent === 'function') {
+         browsee.addEvent('AB_Test_Variant', { variant: 'B' });
+      }
     } else {
-        browsee.addEvent('AB_Test_Variant', { variant: 'A' });
+        if (browsee && typeof browsee.addEvent === 'function') {
+           browsee.addEvent('AB_Test_Variant', { variant: 'A' });
+        }
     }
   }, []);
 
