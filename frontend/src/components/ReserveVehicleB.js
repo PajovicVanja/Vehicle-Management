@@ -10,16 +10,17 @@ import {
   getReservationData,
   deleteReservation,
 } from "../services/reservationService";
-import ReserveVehicleForm from "./ReserveVehicleForm";
+import ReserveVehicleFormB from "./ReserveVehicleFormB";
 import ReportIssueForm from "./ReportIssueForm";
-import VehicleTable from "./VehicleTable";
+import VehicleTableB from "./VehicleTableB";
 import VehicleDetail from "./VehicleDetail";
 import MalfunctionMessage from "./MalfunctionMessage";
 import ReservationControls from "./ReservationControls";
-import VehicleSearch from "./VehicleSearch";
+import VehicleSearchB from "./VehicleSearchB";
 import { getAuth } from "firebase/auth";
+import "../CSS/VersionB.css";
 
-function Reserve({
+function ReserveVehicleB({
   token,
   setShowReserve,
   setShowAddVehicle,
@@ -40,6 +41,10 @@ function Reserve({
   const [reportIssueVehicleId, setReportIssueVehicleId] = useState(null);
   const [showMessage, setShowMessage] = useState(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   // Search filters
   const [filters, setFilters] = useState({
     name: "",
@@ -55,13 +60,6 @@ function Reserve({
   const canRepairVehicle = role === "Admin";
   const canDeleteVehicle = role === "Admin";
   const canViewAllReservations = role === "Admin" || role === "Manager";
-
-  // Debugging: Log variables after all dependencies are declared
-  useEffect(() => {
-    console.log("Reserve Debug - Vehicles:", vehicles);
-    console.log("Reserve Debug - Can Repair Vehicle:", canRepairVehicle);
-    console.log("Reserve Debug - Handle View Message Function:", handleViewMessage);
-  }, [vehicles, canRepairVehicle]);
 
   const fetchVehicles = useCallback(async () => {
     setLoading(true);
@@ -113,7 +111,12 @@ function Reserve({
     }
   }, [reservations, uid]);
 
-  // --- Search logic (case-insensitive contains for text; numeric ranges for year & hp)
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
+  // --- Search logic
   const filteredVehicles = useMemo(() => {
     const norm = (v) => (v ?? "").toString().toLowerCase();
     const num = (v) => {
@@ -151,6 +154,14 @@ function Reserve({
       return true;
     });
   }, [vehicles, filters]);
+
+  // --- Pagination Logic
+  const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+  const paginatedVehicles = filteredVehicles.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+  );
+
 
   const handleReserve = (vehicleId) => {
     setReserveVehicleId(vehicleId);
@@ -225,7 +236,7 @@ function Reserve({
 
   if (reserveVehicleId) {
     return (
-      <ReserveVehicleForm
+      <ReserveVehicleFormB
         token={token}
         reserveVehicleId={reserveVehicleId}
         setReserveVehicleId={setReserveVehicleId}
@@ -270,16 +281,11 @@ function Reserve({
   }
 
   return (
-    <div className="vehicle-container">
-      <h2>List of All Vehicles</h2>
+    <div className="vehicle-container-b">
+      <h2 style={{ fontSize: '1.8rem', color: '#333', marginBottom: 20 }}>List of All Vehicles</h2>
 
-      {/* Search controls */}
-      <VehicleSearch filters={filters} setFilters={setFilters} onClear={clearFilters} />
-
-      {/* Tiny helper text */}
-      <p style={{ marginTop: -6, marginBottom: 10, fontSize: 12, opacity: 0.8 }}>
-        Name/Color/Engine use case-insensitive “contains”. Year/HP filter by min/max.
-      </p>
+      {/* Search controls B */}
+      <VehicleSearchB filters={filters} setFilters={setFilters} onClear={clearFilters} />
 
       {loading ? (
         <p>Loading...</p>
@@ -289,11 +295,11 @@ function Reserve({
         <p>No vehicles found.</p>
       ) : (
         <>
-          <p style={{ fontSize: 12, opacity: 0.8, margin: "4px 0 8px" }}>
-            Showing {filteredVehicles.length} of {vehicles.length}
+          <p style={{ fontSize: 13, color: '#666', marginTop: 10, marginLeft: 4 }}>
+            Showing {filteredVehicles.length} result(s)
           </p>
-          <VehicleTable
-            vehicles={filteredVehicles}
+          <VehicleTableB
+            vehicles={paginatedVehicles}
             userReservation={userReservation}
             canRepairVehicle={canRepairVehicle}
             canDeleteVehicle={canDeleteVehicle}
@@ -305,6 +311,29 @@ function Reserve({
             handleDelete={handleDelete}
             handleViewMessage={handleViewMessage}
           />
+
+          {/* Pagination Controls */}
+          {filteredVehicles.length > itemsPerPage && (
+            <div className="pagination-controls">
+                <button 
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="page-info">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                  className="pagination-btn"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+            </div>
+          )}
         </>
       )}
 
@@ -321,4 +350,4 @@ function Reserve({
   );
 }
 
-export default Reserve;
+export default ReserveVehicleB;

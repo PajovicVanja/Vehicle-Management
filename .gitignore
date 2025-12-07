@@ -83,3 +83,7 @@ output.txt
 copy.js
 output.txt
 frontend/outputFront.txt
+backend-config.js
+local-server.js
+test-require.js
+server.txt

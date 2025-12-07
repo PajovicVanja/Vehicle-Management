@@ -1,13 +1,59 @@
-.menu-group{
+/* Global Layout - Safe Flexbox Center Strategy */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* 1. The Root (The Canvas) */
+#root {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers buttons horizontally */
-  align-items: center; /* Centers buttons vertically */
+  /* No justify-content here! margin: auto on child handles the center. */
+}
+
+/* 2. The App Wrapper (The Content Bundle) */
+/* Targets the direct child of #root, which is the App component's wrapper */
+#root>div {
+  width: 100%;
+  /* The Magic: margin: auto vertically centers this wrapper if it fits, 
+     but top-aligns it if it overflows (safe centering) */
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center content horizontally */
+  padding-bottom: 40px;
+  /* Safety padding at bottom */
+}
+
+/* 3. The Title */
+h1 {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+/* 4. Cleanup Components (Natural Height) */
+.menu-group,
+.login-container,
+.profile-container,
+.auth-container {
+  width: 100%;
+  max-width: 500px;
+  /* Contained feel for short pages */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Removed: flex-grow, min-height, margin-top: auto */
 }
 
 .button-group {
-    display: flex;
-    justify-content: center; /* Centers buttons horizontally */
-    align-items: center; /* Centers buttons vertically */
-    gap: 10px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}

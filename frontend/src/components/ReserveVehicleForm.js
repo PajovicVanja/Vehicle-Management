@@ -11,7 +11,7 @@ import { reserveVehicle } from '../services/vehicleService';
 import { db, collection, doc } from '../firebaseClient'; // Import Firestore
 import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 
-function ReserveVehicleForm({ token, reserveVehicleId, setReserveVehicleId, fetchVehicles }) {
+function ReserveVehicleForm({ token, reserveVehicleId, setReserveVehicleId, fetchVehicles, onRefresh, onSuccess }) {
   const [endDate, setEndDate] = useState(new Date());
   const startDate = new Date().toISOString().split('T')[0]; // Current date in 'YYYY-MM-DD' format
   const status = 'Active';
@@ -71,7 +71,17 @@ function ReserveVehicleForm({ token, reserveVehicleId, setReserveVehicleId, fetc
 
       if (result.success) {
         console.log(`[ReserveVehicleForm] Vehicle ${reserveVehicleId} status updated.`);
-        fetchVehicles(); // Refresh the list of vehicles
+        if (onRefresh) {
+           console.log('Refreshing user data in App...');
+           await onRefresh();
+        }
+        
+        if (onSuccess) {
+            onSuccess();
+        } else {
+            fetchVehicles();
+            setReserveVehicleId(null);
+        }
       } else {
         console.error(`[ReserveVehicleForm] Failed to update vehicle status for ID: ${reserveVehicleId}`);
         setMessage('Failed to reserve vehicle. Please try again.');

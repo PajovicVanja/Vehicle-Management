@@ -8,6 +8,9 @@ import AddVehicle from './components/AddVehicle';
 import UploadLicense from './components/UploadLicense';
 import CurrentReservationsAdmin from './components/CurrentReservationsAdmin';
 import ViewReservation from './components/ViewReservation';
+// A/B Test Imports
+import ReserveVehicleB from './components/ReserveVehicleB';
+import ViewReservationB from './components/ViewReservationB';
 import { getUserData } from './services/authService';
 import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 
@@ -24,6 +27,17 @@ function App() {
   const [showReserve, setShowReserve] = useState(false); // Used for viewing vehicles
   const [showAddVehicle, setShowAddVehicle] = useState(false);
   const [showAllCarReservations, setShowAllCarReservations] = useState(false);
+  
+  // A/B Test Variant State
+  const [isVersionB, setIsVersionB] = useState(false);
+
+  // Check for variant query param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('variant') === 'B') {
+      setIsVersionB(true);
+    }
+  }, []);
 
   //Reservation form
   const [uid, setUid] = useState(null);
@@ -31,9 +45,8 @@ function App() {
   const [userReservation, setUserReservation] = useState(null);
 
   // Fetch role and license status after login
-  useEffect(() => {
-    // Fetch role and license status after login
-    const fetchRole = async () => {
+  // Fetch role and license status after login
+  const refreshUserData = async () => {
       if (token) {
         const userData = await getUserData(token);
         if (userData.success) {
@@ -58,8 +71,10 @@ function App() {
           user ? setUid(user.uid) : setUid(null);
         }
       }
-    };
-    fetchRole();
+  };
+
+  useEffect(() => {
+    refreshUserData();
   }, [token]);
 
   useEffect(() => {
@@ -71,10 +86,10 @@ function App() {
   }, [reservations, uid]);
   
   return (
-    <div>
+    <div className="app-main-container">
       <h1>Vehicle Management System</h1>
       {!token ? (
-        <>
+        <div className="auth-container">
           {/* Register or Login UI */}
           {showRegister ? (
             <Register setToken={setToken} />
@@ -87,18 +102,31 @@ function App() {
           >
             {showRegister ? 'Switch to Login' : 'Switch to Register'}
           </button>
-        </>
+        </div>
       ) : showAddVehicle ? (
         <AddVehicle token={token} setShowAddVehicle={setShowAddVehicle} />
       ) : showReserve ? (
-        <ReserveVehicle
-          token={token}
-          setShowReserve={setShowReserve}
-          setShowAddVehicle={setShowAddVehicle}
-          setShowAllCarReservations={setShowAllCarReservations}
-          canReserve={role === 'Driver'} 
-          userReservationReset={setUserReservation}
-        />
+        isVersionB ? (
+             <ReserveVehicleB
+                token={token}
+                setShowReserve={setShowReserve}
+                setShowAddVehicle={setShowAddVehicle}
+                setShowAllCarReservations={setShowAllCarReservations}
+                canReserve={role === 'Driver'} 
+                userReservationReset={setUserReservation}
+                onRefresh={refreshUserData}
+              />
+        ) : (
+             <ReserveVehicle
+                token={token}
+                setShowReserve={setShowReserve}
+                setShowAddVehicle={setShowAddVehicle}
+                setShowAllCarReservations={setShowAllCarReservations}
+                canReserve={role === 'Driver'} 
+                userReservationReset={setUserReservation}
+                onRefresh={refreshUserData}
+            />
+        )
       ) : showProfile ? (
         <Profile token={token} setShowProfile={setShowProfile} />
       ) : showAllCarReservations ? (
@@ -114,11 +142,21 @@ function App() {
           )}
           {/* Show the active reservation, if it exists */}
           {userReservation ? (
-            <ViewReservation
-              token={token}
-              reservationData={userReservation}
-              onReservationCleared={() => setUserReservation(null)}  
-            />
+            isVersionB ? (
+                <ViewReservationB
+                  token={token}
+                  reservationData={userReservation}
+                  onReservationCleared={() => setUserReservation(null)}  
+                  onRefresh={refreshUserData}
+                />
+            ) : (
+                <ViewReservation
+                  token={token}
+                  reservationData={userReservation}
+                  onReservationCleared={() => setUserReservation(null)}  
+                  onRefresh={refreshUserData}
+                />
+            )
           ) : (<></>)}
           <div className="button-group">
             <button

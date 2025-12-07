@@ -1,12 +1,13 @@
-// components/ViewReservation.js
+// components/ViewReservationB.js
 import React, { useState, useEffect } from 'react';
 import '../CSS/UploadLicense.css';
 import '../CSS/ReserveVehicle.css';
+import '../CSS/VersionB.css'; // Import Version B CSS
 
 import { getVehicleData, unreserveVehicle, reportVehicleIssue } from '../services/vehicleService';
 import { deleteReservation } from '../services/reservationService';
 
-function ViewRes({ token, reservationData, onReservationCleared, onRefresh }) {
+function ViewResB({ token, reservationData, onReservationCleared, onRefresh }) {
   const [vehicles, setVehicles] = useState([]);
   const [userVehicle, setUserVehicle] = useState(null);
 
@@ -15,6 +16,9 @@ function ViewRes({ token, reservationData, onReservationCleared, onRefresh }) {
   const [submitting, setSubmitting] = useState(false);
   const [showReportForm, setShowReportForm] = useState(false);
   const [issueDescription, setIssueDescription] = useState('');
+
+  // Confirmation Modal State
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -74,6 +78,7 @@ function ViewRes({ token, reservationData, onReservationCleared, onRefresh }) {
       setActionMsg('An error occurred while removing the reservation.');
     } finally {
       setSubmitting(false);
+      setShowConfirmModal(false); 
     }
   };
 
@@ -108,64 +113,64 @@ function ViewRes({ token, reservationData, onReservationCleared, onRefresh }) {
 
   return (
     <div className="reservation-container">
-      <h2>Your Current Reservation</h2>
-      <table className="vehicle-table">
-        <tbody>
-          <tr>
-            <td><strong>Vehicle Name:</strong></td>
-            <td>{userVehicle.vehicleName}</td>
-          </tr>
-          <tr>
-            <td><strong>Start Date:</strong></td>
-            <td>{reservationData.startDate}</td>
-          </tr>
-          <tr>
-            <td><strong>End Date:</strong></td>
-            <td>{reservationData.endDate}</td>
-          </tr>
-          <tr>
-            <td><strong>Status:</strong></td>
-            <td>{reservationData.status}</td>
-          </tr>
-        </tbody>
-      </table>
+      {/* CARD DESIGN */}
+      <div className="reservation-card">
+        <h2>Your Current Reservation (vB)</h2>
+        
+        <div className="card-row">
+            <span className="card-label">Vehicle Name:</span>
+            <span className="card-value">{userVehicle.vehicleName}</span>
+        </div>
+        <div className="card-row">
+            <span className="card-label">Start Date:</span>
+            <span className="card-value">{reservationData.startDate}</span>
+        </div>
+        <div className="card-row">
+            <span className="card-label">End Date:</span>
+            <span className="card-value">{reservationData.endDate}</span>
+        </div>
+        <div className="card-row">
+            <span className="card-label">Status:</span>
+            <span className="card-value">{reservationData.status}</span>
+        </div>
 
-      <div className="button-group" style={{ marginTop: 12 }}>
-        <button
-          className="goto-register-button"
-          onClick={handleRemoveReservation}
-          disabled={submitting}
-        >
-          {submitting ? 'Processing…' : 'Remove Reservation'}
-        </button>
-
-        {!showReportForm ? (
+        <div className="button-group" style={{ marginTop: 20, justifyContent: 'center' }}>
           <button
-            className="goto-register-button"
-            onClick={() => setShowReportForm(true)}
+            className="btn-danger"
+            onClick={() => setShowConfirmModal(true)} // Open modal instead of direct action
             disabled={submitting}
           >
-            Report Issue
+            {submitting ? 'Processing…' : 'Remove Reservation'}
           </button>
-        ) : null}
+
+          {!showReportForm ? (
+            <button
+              className="btn-primary"
+              onClick={() => setShowReportForm(true)}
+              disabled={submitting}
+            >
+              Report Issue
+            </button>
+          ) : null}
+        </div>
       </div>
 
       {showReportForm && (
-        <form onSubmit={handleReportIssue} style={{ marginTop: 12 }}>
+        <form onSubmit={handleReportIssue} style={{ marginTop: 12, maxWidth: 500, margin: '20px auto' }}>
           <textarea
             value={issueDescription}
             onChange={(e) => setIssueDescription(e.target.value)}
             placeholder="Describe the issue"
             rows={4}
-            style={{ width: '100%', maxWidth: 480 }}
+            style={{ width: '100%' }}
           />
-          <div className="button-group" style={{ marginTop: 8 }}>
-            <button className="goto-register-button" type="submit" disabled={submitting}>
+          <div className="button-group" style={{ marginTop: 8, justifyContent: 'center' }}>
+            <button className="btn-primary" type="submit" disabled={submitting}>
               {submitting ? 'Submitting…' : 'Submit Issue'}
             </button>
             <button
               type="button"
-              className="goto-register-button"
+              className="btn-secondary"
               onClick={() => {
                 setShowReportForm(false);
                 setIssueDescription('');
@@ -178,9 +183,32 @@ function ViewRes({ token, reservationData, onReservationCleared, onRefresh }) {
         </form>
       )}
 
-      {actionMsg && <p className="profile-message" style={{ marginTop: 10 }}>{actionMsg}</p>}
+      {actionMsg && <p className="profile-message" style={{ marginTop: 10, textAlign: 'center' }}>{actionMsg}</p>}
+
+        {/* CONFIRMATION MODAL */}
+        {showConfirmModal && (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                    <h3>Are you sure you want to cancel this reservation?</h3>
+                    <div className="modal-actions">
+                        <button 
+                            className="btn-secondary"
+                            onClick={() => setShowConfirmModal(false)}
+                        >
+                            No, Keep it
+                        </button>
+                        <button 
+                            className="btn-danger"
+                            onClick={handleRemoveReservation}
+                        >
+                            Yes, Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
   );
 }
 
-export default ViewRes;
+export default ViewResB;
