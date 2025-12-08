@@ -215,6 +215,17 @@ function App() {
               Log Out
             </button>
           </div>
+
+          <div className="survey-container">
+            <a 
+              href={isVersionB ? "https://1ka.arnes.si/a/b236ac55" : "https://1ka.arnes.si/a/6ca42afa"} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-survey"
+            >
+              Take our Usability Survey
+            </a>
+          </div>
         </div>
       )}
     </div>

@@ -1,87 +1,133 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #fdfdfd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  .login-container {
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    width: 320px;
-    text-align: center;
-  }
-  
-  h2 {
-    color: #e63946;
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-  }
-  
-  .login-input {
-    width: 100%;
-    padding: 0.8rem;
-    margin: 0.6rem 0;
-    border: 1px solid #f0f0f0;
-    border-radius: 10px;
-    background-color: #fafafa;
-    color: #333;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .login-input:focus {
-    outline: none;
-    border-color: #e63946;
-    background-color: #fff;
-    box-shadow: 0 0 5px rgba(230, 57, 70, 0.2);
-  }
-  
-  .login-button {
-    width: 100%;
-    padding: 0.85rem;
-    background-color: #e63946;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    margin-top: 1rem;
-  }
-  
-  .login-button:hover {
-    background-color: #cc3333;
-  }
-  
-  .goto-register-button {
-    margin-top: 1rem;
-    padding: 0.6rem 1.2rem;
-    background-color: transparent;
-    color: #e63946;
-    border: 1px solid #e63946;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .goto-register-button:hover {
-    background-color: #ffe5e5;
-    color: #e63946;
-    border-color: #cc3333;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #fdfdfd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
 
+.login-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 320px;
+  text-align: center;
+}
 
-  .error-message {
-    color: #d32f2f;
-    font-size: 0.9rem;
-    margin-top: 1rem;
-  }
+h2 {
+  color: #e63946;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0.6rem 0;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  color: #333;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  /* Ensure padding doesn't add to width */
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #e63946;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(230, 57, 70, 0.2);
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: #e63946;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.login-button:hover {
+  background-color: #cc3333;
+}
+
+.goto-register-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: transparent;
+  color: #e63946;
+  border: 1px solid #e63946;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.goto-register-button:hover {
+  background-color: #ffe5e5;
+  color: #e63946;
+  border-color: #cc3333;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.password-input-container {
+  position: relative;
+  width: 100%;
+  margin: 0.6rem 0;
+  /* Match the margin of the standalone input */
+}
+
+/* Make sure the input inside the container doesn't have its own bottom margin so the container handles spacing if needed, 
+     or just let it be. The input style has margin: 0.6rem 0.
+     We might want to adjust the input's margin when inside the container.
+  */
+.password-input-container .login-input {
+  margin: 0;
+  /* Remove margin from input and handle it on container if needed, or just keep it simple */
+  width: 100%;
+  /* Ensure it fills the container */
+  padding-right: 40px;
+  /* Make space for the icon */
+  box-sizing: border-box;
+  /* Vital so padding doesn't increase width */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.password-toggle-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.password-toggle-icon:hover {
+  color: #e63946;
+}
