@@ -35,32 +35,25 @@ function App() {
   // A/B Test Variant State
   const [isVersionB, setIsVersionB] = useState(false);
 
-  // Initialize A/B Test Variant
+  // Initialize A/B Test Variant & Analytics
   useEffect(() => {
-    // 1. Check LocalStorage
-    let storedVariant = localStorage.getItem('ab_test_variant');
+    // 1. Initialize SDK (Idempotent)
+    if (browsee) {
+        browsee.init({ apiKey: '85fdc35745de9780b98d14445b14a0c15dff71646ccae766' });
+    }
 
-    // 2. Randomize if not exists
+    // 2. Handle Variant Logic
+    let storedVariant = localStorage.getItem('ab_test_variant');
     if (!storedVariant) {
       storedVariant = Math.random() < 0.5 ? 'A' : 'B';
       localStorage.setItem('ab_test_variant', storedVariant);
     }
-
-    // 3. Set State
     const isB = storedVariant === 'B';
     setIsVersionB(isB);
 
-    // 4. Track Event with Debugging
-    console.log("Checking Browsee...");
-    
-    // Check imported object OR window object for robustness
-    const browseeInstance = browsee || window.browsee;
-
-    if (browseeInstance && typeof browseeInstance.addEvent === 'function') {
-      console.log("Browsee Object found, firing event:", storedVariant);
-      browseeInstance.addEvent('AB_Test_Variant', { variant: storedVariant });
-    } else {
-      console.log("Browsee object NOT found");
+    // 3. Log Event (Fire and Forget)
+    if (window._browsee) {
+      window._browsee('logEvent', 'AB_Test_Variant', { variant: storedVariant });
     }
   }, []);
 
