@@ -52,18 +52,29 @@ function App() {
     setIsVersionB(isB);
 
     // 3. Log Event (Fire and Forget)
-    // 3. Log Event (Fire and Forget)
     if (window._browsee) {
       console.log('Fired event:', 'AB_Test_Variant', { variant: storedVariant });
       window._browsee('logEvent', 'AB_Test_Variant', { variant: storedVariant });
 
-      // Identify the user for segmentation
+      // RESTORED: Identify the user for segmentation (Old Logic)
       console.log('Identifying user: guest_user with ab_variant:', storedVariant);
       window._browsee('identify', 'guest_user', {
          ab_variant: storedVariant 
       });
     } else {
       console.warn('Browsee global object not found. Event AB_Test_Variant was likely NOT logged.');
+    }
+
+    // 4. IDENTIFY the user so we can filter by "Email" in the dashboard
+    if (browsee && typeof browsee.identify === 'function') {
+        const uniqueId = 'user_' + Math.floor(Math.random() * 100000);
+        const fakeEmail = `visitor_${storedVariant}@test.com`; // e.g., visitor_A@test.com
+        
+        console.log('[App] Identifying user as:', fakeEmail);
+        browsee.identify(uniqueId, { 
+            email: fakeEmail,
+            ab_variant: storedVariant // Synced variant here too 
+        });
     }
   }, []);
 
