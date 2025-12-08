@@ -50,9 +50,17 @@ function App() {
     const isB = storedVariant === 'B';
     setIsVersionB(isB);
 
-    // 4. Track Event
-    if (browsee && typeof browsee.addEvent === 'function') {
-      browsee.addEvent('AB_Test_Variant', { variant: storedVariant });
+    // 4. Track Event with Debugging
+    console.log("Checking Browsee...");
+    
+    // Check imported object OR window object for robustness
+    const browseeInstance = browsee || window.browsee;
+
+    if (browseeInstance && typeof browseeInstance.addEvent === 'function') {
+      console.log("Browsee Object found, firing event:", storedVariant);
+      browseeInstance.addEvent('AB_Test_Variant', { variant: storedVariant });
+    } else {
+      console.log("Browsee object NOT found");
     }
   }, []);
 
