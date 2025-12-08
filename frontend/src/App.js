@@ -53,7 +53,10 @@ function App() {
 
     // 3. Log Event (Fire and Forget)
     if (window._browsee) {
+      console.log('Fired event:', 'AB_Test_Variant', { variant: storedVariant });
       window._browsee('logEvent', 'AB_Test_Variant', { variant: storedVariant });
+    } else {
+      console.warn('Browsee global object not found. Event AB_Test_Variant was likely NOT logged.');
     }
   }, []);
 
