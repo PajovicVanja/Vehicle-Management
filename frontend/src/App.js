@@ -35,19 +35,24 @@ function App() {
   // A/B Test Variant State
   const [isVersionB, setIsVersionB] = useState(false);
 
-  // Check for variant query param on mount
+  // Initialize A/B Test Variant
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const isB = params.get('variant') === 'B';
-    if (isB) {
-      setIsVersionB(true);
-      if (browsee && typeof browsee.addEvent === 'function') {
-         browsee.addEvent('AB_Test_Variant', { variant: 'B' });
-      }
-    } else {
-        if (browsee && typeof browsee.addEvent === 'function') {
-           browsee.addEvent('AB_Test_Variant', { variant: 'A' });
-        }
+    // 1. Check LocalStorage
+    let storedVariant = localStorage.getItem('ab_test_variant');
+
+    // 2. Randomize if not exists
+    if (!storedVariant) {
+      storedVariant = Math.random() < 0.5 ? 'A' : 'B';
+      localStorage.setItem('ab_test_variant', storedVariant);
+    }
+
+    // 3. Set State
+    const isB = storedVariant === 'B';
+    setIsVersionB(isB);
+
+    // 4. Track Event
+    if (browsee && typeof browsee.addEvent === 'function') {
+      browsee.addEvent('AB_Test_Variant', { variant: storedVariant });
     }
   }, []);
 
