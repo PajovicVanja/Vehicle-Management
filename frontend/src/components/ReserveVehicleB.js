@@ -282,70 +282,73 @@ function ReserveVehicleB({
 
   return (
     <div className="vehicle-container-b">
-      <h2 style={{ fontSize: '1.8rem', color: '#333', marginBottom: 20 }}>List of All Vehicles</h2>
-
-      {/* Search controls B */}
+      {/* Sidebar: Search controls B */}
       <VehicleSearchB filters={filters} setFilters={setFilters} onClear={clearFilters} />
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>Error loading vehicles: {error}</p>
-      ) : vehicles.length === 0 ? (
-        <p>No vehicles found.</p>
-      ) : (
-        <>
-          <p style={{ fontSize: 13, color: '#666', marginTop: 10, marginLeft: 4 }}>
-            Showing {filteredVehicles.length} result(s)
-          </p>
-          <VehicleTableB
-            vehicles={paginatedVehicles}
-            userReservation={userReservation}
-            canRepairVehicle={canRepairVehicle}
-            canDeleteVehicle={canDeleteVehicle}
-            handleView={handleView}
-            handleReserve={handleReserve}
-            removeReserve={removeReserve}
-            setReportIssueVehicleId={setReportIssueVehicleId}
-            handleRepair={handleRepair}
-            handleDelete={handleDelete}
-            handleViewMessage={handleViewMessage}
-          />
+      {/* Main Content Area */}
+      <div className="vehicle-content-b">
+        <h2 style={{ fontSize: '1.8rem', color: '#333', marginBottom: 20 }}>List of All Vehicles</h2>
 
-          {/* Pagination Controls */}
-          {filteredVehicles.length > itemsPerPage && (
-            <div className="pagination-controls">
-                <button 
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <span className="page-info">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button 
-                  className="pagination-btn"
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
-            </div>
-          )}
-        </>
-      )}
+        {loading ? (
+            <p>Loading...</p>
+        ) : error ? (
+            <p>Error loading vehicles: {error}</p>
+        ) : vehicles.length === 0 ? (
+            <p>No vehicles found.</p>
+        ) : (
+            <>
+            <p style={{ fontSize: 13, color: '#666', marginTop: 10, marginLeft: 4 }}>
+                Showing {filteredVehicles.length} result(s)
+            </p>
+            <VehicleTableB
+                vehicles={paginatedVehicles}
+                userReservation={userReservation}
+                canRepairVehicle={canRepairVehicle}
+                canDeleteVehicle={canDeleteVehicle}
+                handleView={handleView}
+                handleReserve={handleReserve}
+                removeReserve={removeReserve}
+                setReportIssueVehicleId={setReportIssueVehicleId}
+                handleRepair={handleRepair}
+                handleDelete={handleDelete}
+                handleViewMessage={handleViewMessage}
+            />
 
-      <ReservationControls
-        canAddVehicle={canAddVehicle}
-        canViewAllReservations={canViewAllReservations}
-        setShowReserve={setShowReserve}
-        setShowAddVehicle={setShowAddVehicle}
-        setShowAllCarReservations={setShowAllCarReservations}
-        userReservationReset={userReservationReset}
-      />
-      {message && <p className="profile-message">{sanitizeMessage(message)}</p>}
+            {/* Pagination Controls */}
+            {filteredVehicles.length > itemsPerPage && (
+                <div className="pagination-controls">
+                    <button 
+                    className="pagination-btn"
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    >
+                    Previous
+                    </button>
+                    <span className="page-info">
+                    Page {currentPage} of {totalPages}
+                    </span>
+                    <button 
+                    className="pagination-btn"
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    >
+                    Next
+                    </button>
+                </div>
+            )}
+            </>
+        )}
+
+        <ReservationControls
+            canAddVehicle={canAddVehicle}
+            canViewAllReservations={canViewAllReservations}
+            setShowReserve={setShowReserve}
+            setShowAddVehicle={setShowAddVehicle}
+            setShowAllCarReservations={setShowAllCarReservations}
+            userReservationReset={userReservationReset}
+        />
+        {message && <p className="profile-message">{sanitizeMessage(message)}</p>}
+      </div>
     </div>
   );
 }

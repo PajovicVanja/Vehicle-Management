@@ -41,7 +41,9 @@ function ReserveVehicleFormB({ token, reserveVehicleId, setReserveVehicleId, fet
       }, token);
 
       if (result.success) {
-        browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'B' });
+        if (browsee && typeof browsee.addEvent === 'function') {
+            browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'B' });
+        }
         if (onRefresh) {
             await onRefresh();
         }

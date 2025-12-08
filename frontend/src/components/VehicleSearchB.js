@@ -40,7 +40,7 @@ function VehicleSearchB({ filters, setFilters, onClear }) {
           />
         </SearchField>
 
-        <div style={{ display: "flex", gap: 8, alignItems: "flex-end", height: "100%", paddingBottom: 2 }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
             <button
                 type="button"
                 className="clear-btn"
@@ -54,7 +54,9 @@ function VehicleSearchB({ filters, setFilters, onClear }) {
                 onClick={() => {
                     const newState = !showAdvanced;
                     setShowAdvanced(newState);
-                    browsee.addEvent('Advanced_Filters_Toggle', { state: newState ? 'opened' : 'closed' });
+                    if (browsee && typeof browsee.addEvent === 'function') {
+                        browsee.addEvent('Advanced_Filters_Toggle', { state: newState ? 'opened' : 'closed' });
+                    }
                 }}
             >
                 {showAdvanced ? "Hide Filters" : "More Filters"}

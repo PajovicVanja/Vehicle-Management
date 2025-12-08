@@ -72,7 +72,9 @@ function ReserveVehicleForm({ token, reserveVehicleId, setReserveVehicleId, fetc
 
       if (result.success) {
         console.log(`[ReserveVehicleForm] Vehicle ${reserveVehicleId} status updated.`);
-        browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'A' });
+        if (browsee && typeof browsee.addEvent === 'function') {
+            browsee.addEvent('Reservation_Success', { vehicleId: reserveVehicleId, variant: 'A' });
+        }
         
         if (onRefresh) {
            console.log('Refreshing user data in App...');

@@ -21,7 +21,7 @@ const VehicleRowB = ({
     <tr className={`vehicle-row-b ${status}`}>
       <td>
         <div className="vehicle-name-b">{vehicle.vehicleName}</div>
-        <div className="vehicle-id-sub">{vehicle.vehicleId.substring(0,6)}...</div>
+
       </td>
       <td>{vehicle.color || "—"}</td>
       <td>{vehicle.year || "—"}</td>

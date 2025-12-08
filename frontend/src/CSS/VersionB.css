@@ -143,20 +143,24 @@
 /* === CONTAINERS === */
 
 /* Main Page Container (Vehicle List) */
+/* Main Page Container (Vehicle List) */
 .vehicle-container-b {
-  max-width: 1000px;
+  max-width: 1400px;
+  /* Increased to fit sidebar + table comfortably */
   width: 95%;
-  /* Use a safe margin that grows if needed */
-  margin: 40px auto; 
+  margin: 40px auto;
   padding: 30px;
   background-color: #fafafa;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  
-  /* IMPORTANT: Do NOT set max-height or overflow-y here. 
-     Let the container grow naturally so the page scrolls. */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   height: auto;
-  overflow: visible; 
+  overflow: visible;
+
+  /* Flexbox Layout: Sidebar (Left) + Content (Right) */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
 }
 
 /* If you have a wrapping parent causing the centering issue, fix it here: */
@@ -164,7 +168,7 @@
   display: flex;
   justify-content: center;
   /* CHANGE: align-items center causes the cut-off bug on tall content */
-  align-items: flex-start; 
+  align-items: flex-start;
   min-height: 100vh;
   background-color: #fafafa;
   padding: 20px;
@@ -172,21 +176,41 @@
 }
 
 /* === SEARCH AREA === */
+/* === SEARCH AREA (SIDEBAR) === */
 .search-container-b {
+  /* Sidebar Fixed Width */
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
+
   background: #ffffff;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
-  /* IMPORTANT: Ensure this is visible so shadows/rings aren't cut off */
-  overflow: visible; 
+  margin-bottom: 0;
+  /* No bottom margin needed in flex row */
+  overflow: visible;
+  position: sticky;
+  top: 20px;
+  /* Optional: Makes sidebar sticky if wanted */
+}
+
+/* === MAIN CONTENT AREA === */
+.vehicle-content-b {
+  flex: 1;
+  /* Take remaining width */
+  min-width: 0;
+  /* Prevent flex child from overflowing */
+  display: flex;
+  flex-direction: column;
 }
 
 .search-grid-b {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  /* Changed from grid to flex column for vertical stack */
+  flex-direction: column;
   gap: 16px;
-  align-items: center;
+  width: 100%;
 }
 
 .search-field-b {
@@ -492,4 +516,27 @@
   justify-content: center;
   gap: 20px;
   margin-top: 20px;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 900px) {
+  .vehicle-container-b {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container-b {
+    width: 100%;
+    flex: none;
+    margin-bottom: 30px;
+    position: static;
+    /* Remove sticky on mobile */
+  }
+
+  .search-grid-b {
+    /* Revert to grid on mobile if you want side-by-side inputs again, 
+       OR keep as flex column. Let's make it a grid for better space usage on mobile. */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 }

@@ -36,7 +36,9 @@ const VehicleTableB = ({
                 canDeleteVehicle={canDeleteVehicle}
                 handleView={handleView}
                 handleReserve={(id) => {
-                    browsee.addEvent('Reservation_Clicked', { vehicleName: vehicle.vehicleName });
+                    if (browsee && typeof browsee.addEvent === 'function') {
+                        browsee.addEvent('Reservation_Clicked', { vehicleName: vehicle.vehicleName });
+                    }
                     handleReserve(id);
                 }}
                 removeReserve={removeReserve}
