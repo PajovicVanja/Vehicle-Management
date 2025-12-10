@@ -46,8 +46,15 @@ const VehicleRowB = ({
 
           {status !== "available" && userReservation?.vehicleId === vehicle.vehicleId && (
             <>
-              <button onClick={() => removeReserve(vehicle)} className="btn-action-b btn-warning-b">
-                Cancel
+              <button
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to end your reservation?")) {
+                    removeReserve(vehicle);
+                  }
+                }}
+                className="btn-action-b btn-warning-b"
+              >
+                End
               </button>
               <button
                 onClick={() => setReportIssueVehicleId(vehicle.vehicleId)}
