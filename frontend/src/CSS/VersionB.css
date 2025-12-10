@@ -493,7 +493,9 @@
   max-width: 400px;
 }
 
-.react-calendar__tile--active {
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
   background: #38a169 !important;
   color: white !important;
   border-radius: 8px;

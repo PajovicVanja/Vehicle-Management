@@ -1,5 +1,5 @@
 // frontend/src/components/VehicleRowB.js
-import React from "react";
+import React, { useState } from "react";
 import "../CSS/VersionB.css";
 
 const VehicleRowB = ({
@@ -16,6 +16,7 @@ const VehicleRowB = ({
   handleViewMessage,
 }) => {
   const status = vehicle.status;
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   return (
     <tr className={`vehicle-row-b ${status}`}>
@@ -47,11 +48,7 @@ const VehicleRowB = ({
           {status !== "available" && userReservation?.vehicleId === vehicle.vehicleId && (
             <>
               <button
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to end your reservation?")) {
-                    removeReserve(vehicle);
-                  }
-                }}
+                onClick={() => setShowConfirmModal(true)}
                 className="btn-action-b btn-warning-b"
               >
                 End
@@ -82,6 +79,33 @@ const VehicleRowB = ({
             </button>
           )}
         </div>
+
+        {/* Custom Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>End Reservation?</h3>
+              <p>Are you sure you want to end your reservation?</p>
+              <div className="modal-actions">
+                <button
+                  className="btn-secondary"
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  No, Keep it
+                </button>
+                <button
+                  className="btn-danger"
+                  onClick={() => {
+                    removeReserve(vehicle);
+                    setShowConfirmModal(false);
+                  }}
+                >
+                  Yes, End it
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </td>
     </tr>
   );

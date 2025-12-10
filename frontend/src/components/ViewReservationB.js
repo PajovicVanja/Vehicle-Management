@@ -115,7 +115,7 @@ function ViewResB({ token, reservationData, onReservationCleared, onRefresh }) {
     <div className="reservation-container">
       {/* CARD DESIGN */}
       <div className="reservation-card">
-        <h2>Your Current Reservation (vB)</h2>
+        <h2>Your Current Reservation</h2>
         
         <div className="card-row">
             <span className="card-label">Vehicle Name:</span>
