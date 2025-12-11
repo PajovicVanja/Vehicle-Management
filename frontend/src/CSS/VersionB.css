@@ -502,10 +502,16 @@
 }
 
 .react-calendar__tile--now {
+  background: #38a169 !important;
+  color: black !important;
+  border-radius: 8px;
+}
+
+/* .react-calendar__tile--now {
   background: #e6fffa !important;
   color: #319795 !important;
   border-radius: 8px;
-}
+} */
 
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
